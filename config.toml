@@ -11,3 +11,6 @@ server_url = "https://jklm.fun/api"
 [bot]
 username = "OpenBot"
 profile_image = "icon.png"
+
+[logger]
+level = "debug"

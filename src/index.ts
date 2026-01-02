@@ -1,3 +1,5 @@
+console.log('Running!');
+
 import { createLogger, format, Logger, transports } from 'winston';
 const { combine, timestamp, label, printf } = format;
 import { Format, TransformableInfo } from 'logform';

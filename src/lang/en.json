@@ -6,5 +6,6 @@
       "done": "%name% %version% started in %%ms%%ms."
     },
     "join": "Joined lobby %%code%% as %bot.username%."
-  }
+  },
+  "command_not_found": "Error: Command %%name%% not found."
 }

@@ -223,4 +223,26 @@ export default class Rooms {
     this.chatSocket = chatSocket;
     this.gameSocket = gameSocket;
   }
+
+  async setup(chatHandler: any, gameHandler: any): Promise<void> {
+    if (!this.chatSocket || !this.gameSocket) {
+      throw new Error('Chat or game socket not connected');
+    }
+    this.chatSocket.on('chat', chatHandler);
+    this.gameSocket.on('game', gameHandler);
+  }
+
+  getChatSocket(): Socket {
+    if (!this.chatSocket) {
+      throw new Error('Chat socket not connected');
+    }
+    return this.chatSocket;
+  }
+
+  getGameSocket(): Socket {
+    if (!this.gameSocket) {
+      throw new Error('Game socket not connected');
+    }
+    return this.gameSocket;
+  }
 }

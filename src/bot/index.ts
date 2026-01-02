@@ -1,7 +1,8 @@
 import { openDatabase } from '../database';
-import { Config } from '../types';
+import { Config, ChatData } from '../types';
 import Client from '../client';
 import Lang from './lang';
+import Commands from './commands';
 
 export default class Bot {
   logger: Config['logger'];
@@ -13,6 +14,7 @@ export default class Bot {
     code: string | undefined;
     server: string | undefined;
   };
+  commands: Commands;
 
   constructor(config: Config) {
     this.logger = config.logger;
@@ -24,6 +26,7 @@ export default class Bot {
       code: undefined,
       server: undefined,
     };
+    this.commands = new Commands(this);
   }
 
   async #init(): Promise<void> {
@@ -81,6 +84,8 @@ export default class Bot {
     this.logger.log('debug', 'Joining lobby');
     await this.client.rooms.join(this.lobby.code!, this.lobby.server!);
     this.logger.log('debug', 'Joined lobby');
+
+    await this.client.setup(this.chat.bind(this), undefined);
   }
 
   async start(): Promise<void> {
@@ -95,5 +100,15 @@ export default class Bot {
         code: this.lobby.code,
       })
     );
+  }
+
+  async chat(data: ChatData, text: string): Promise<void> {
+    const message = this.commands.parseChat(data, text);
+    if (message.data.nickname === this.config.bot.username) return;
+    if (message.data.text!.startsWith('.')) {
+      const command = message.data.text!.slice(1).split(' ')[0];
+      const response = this.commands.run(command, message);
+      this.client.parseResponse(response);
+    }
   }
 }

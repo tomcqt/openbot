@@ -1,23 +1,27 @@
 import { openDatabase } from '../database';
-import { Config, LowDb } from '../types';
+import { Config, LowDb, Message } from '../types';
 import crypto from 'node:crypto';
 import Lang from '../bot/lang';
 import path from 'node:path';
 import Rooms from './rooms';
 import sharp from 'sharp';
-import fs from 'node:fs';
+import Chat from './chat';
 
 export default class Client {
   config: Config['conf'];
   logger: Config['logger'];
   rooms: Rooms;
   db: undefined | LowDb;
+  chat: Chat;
+  language: Lang;
 
   constructor(config: Config, lang: Lang) {
     this.config = config.conf;
     this.logger = config.logger;
     this.rooms = new Rooms(config, lang, this);
     this.db = undefined;
+    this.chat = new Chat(this);
+    this.language = lang;
   }
 
   async getUserToken(): Promise<string> {
@@ -68,5 +72,22 @@ export default class Client {
       .toBuffer();
 
     return buffer.toString('base64');
+  }
+
+  async setup(chatHandler: any, errorHandler: any): Promise<void> {
+    await this.rooms.setup(chatHandler, errorHandler);
+  }
+
+  parseResponse(response: Message) {
+    switch (response.type) {
+      case 'message':
+        this.chat.send(response.data.text!);
+        break;
+      case 'error':
+        this.chat.send(response.data.text!);
+        break;
+      default:
+        this.chat.send(this.language.get('unknown_response'));
+    }
   }
 }

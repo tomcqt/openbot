@@ -1,12 +1,13 @@
-import { ClientData } from '../../types';
+import { Message } from '../../types';
 
 export default {
   name: 'echo',
-  handler: (data: ClientData) => {
+  handler: (data: Message) => {
+    if (data.type !== 'message') return;
     return {
       type: 'message',
       data: {
-        text: data.text,
+        text: data.data.text?.replace('.echo', '').trim(),
       },
     };
   },

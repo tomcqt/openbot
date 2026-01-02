@@ -1,10 +1,6 @@
 import { Logger } from 'winston';
 import { Low } from 'lowdb';
 
-export interface ClientData {
-  text: String;
-}
-
 export interface Config {
   logger: Logger;
   conf: Record<string, any>;
@@ -41,3 +37,36 @@ export type JoinRoomResponse = {
 };
 
 export type LowDb = Low<Database>;
+
+export type Command = {
+  name: string;
+  handler: CommandHandler;
+};
+
+export type CommandHandler = (data: Message) => any;
+
+export type Message = {
+  type: string;
+  data: {
+    text?: string;
+    nickname?: string;
+    picture?: string;
+    roles?: string[];
+    service?: string;
+    authName?: string;
+    authId?: number;
+    peerId?: number;
+  };
+};
+
+export type ChatData = {
+  nickname: string;
+  picture: string;
+  roles: string[];
+  auth: {
+    service: string;
+    username: string;
+    id: string;
+  };
+  peerId: number;
+};
