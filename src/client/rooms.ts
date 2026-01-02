@@ -160,6 +160,10 @@ export default class Rooms {
   }) {
     const { roomCode, userToken, nickname, language } = options;
 
+    const picture = await this.parent.parseProfileImage(
+      this.config.bot.profile_image
+    );
+
     const response = await axios.post<JoinRoomResponse>(
       'https://jklm.fun/api/joinRoom',
       { roomCode }
@@ -185,7 +189,7 @@ export default class Rooms {
       chatSocket.once('connect', () => {
         chatSocket.emit(
           'joinRoom',
-          { roomCode, userToken, nickname, language },
+          { roomCode, userToken, nickname, language, picture },
           () => {
             resolve();
           }

@@ -2,7 +2,10 @@ import { openDatabase } from '../database';
 import { Config, LowDb } from '../types';
 import crypto from 'node:crypto';
 import Lang from '../bot/lang';
+import path from 'node:path';
 import Rooms from './rooms';
+import sharp from 'sharp';
+import fs from 'node:fs';
 
 export default class Client {
   config: Config['conf'];
@@ -50,5 +53,20 @@ export default class Client {
     this.logger.log('debug', 'Created new token');
 
     return token;
+  }
+
+  async parseProfileImage(
+    filename: string,
+    quality: number = 80
+  ): Promise<string> {
+    const filePath = path.resolve(filename);
+
+    const buffer = await sharp(filePath)
+      .resize(128, 128, { fit: 'fill' }) // exact 128x128
+      .flatten({ background: '#ffffff' }) // handle transparency
+      .jpeg({ quality })
+      .toBuffer();
+
+    return buffer.toString('base64');
   }
 }
