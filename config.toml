@@ -1,0 +1,12 @@
+config_version = 1 # DO NOT CHANGE
+
+name = "OpenBot"
+version = "1.0.0"
+language = "en"
+
+[client]
+room_name = ">_ OpenBot"
+server_url = "https://jklm.fun/api"
+
+[bot]
+username = "OpenBot"

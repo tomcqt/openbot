@@ -1,0 +1,10 @@
+{
+  "language": "en-US",
+  "logs": {
+    "start": {
+      "in_progress": "Starting up...",
+      "done": "%name% %version% started in %%ms%%ms."
+    },
+    "join": "Joined lobby %%code%% as %bot.username%."
+  }
+}

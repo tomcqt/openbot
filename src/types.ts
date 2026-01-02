@@ -1,0 +1,43 @@
+import { Logger } from 'winston';
+import { Low } from 'lowdb';
+
+export interface ClientData {
+  text: String;
+}
+
+export interface Config {
+  logger: Logger;
+  conf: Record<string, any>;
+  language: string;
+}
+
+export type Room = {
+  name: string;
+  server: string;
+  created_at: number;
+  roomCode: string;
+  isLobby: boolean;
+};
+
+export type Player = {
+  id: string;
+  name: string;
+  // TODO: add more fields
+};
+
+export type Token = {
+  created_at: number;
+  token: string;
+};
+
+export type Database = {
+  rooms: Room[];
+  players: Player[];
+  tokens: Token[];
+};
+
+export type JoinRoomResponse = {
+  url: string;
+};
+
+export type LowDb = Low<Database>;
