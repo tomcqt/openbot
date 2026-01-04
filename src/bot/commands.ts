@@ -40,7 +40,7 @@ export default class Commands {
       return {
         type: 'error',
         data: {
-          text: this.bot.lang.get('command_not_found', undefined, { name }),
+          text: this.bot.language.get('command_not_found', undefined, { name }),
         },
       };
     return command.handler(data);

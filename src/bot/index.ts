@@ -6,7 +6,7 @@ import Commands from './commands';
 
 export default class Bot {
   logger: Config['logger'];
-  lang: Lang;
+  language: Lang;
   config: Config['conf'];
   db: any;
   client: Client;
@@ -18,10 +18,10 @@ export default class Bot {
 
   constructor(config: Config) {
     this.logger = config.logger;
-    this.lang = new Lang(config);
+    this.language = new Lang(config);
     this.config = config.conf;
     this.db = null;
-    this.client = new Client(config, this.lang);
+    this.client = new Client(config, this.language);
     this.lobby = {
       code: undefined,
       server: undefined,
@@ -30,7 +30,7 @@ export default class Bot {
   }
 
   async #init(): Promise<void> {
-    this.logger.info(this.lang.get('logs.start.in_progress'));
+    this.logger.info(this.language.get('logs.start.in_progress'));
 
     this.logger.log('debug', 'Connecting to database');
     this.db = await openDatabase();
@@ -91,12 +91,12 @@ export default class Bot {
   async start(): Promise<void> {
     await this.#init();
     this.logger.info(
-      this.lang.get('logs.start.done', undefined, {
+      this.language.get('logs.start.done', undefined, {
         ms: process.uptime() * 1000,
       })
     );
     this.logger.info(
-      this.lang.get('logs.join', undefined, {
+      this.language.get('logs.join', undefined, {
         code: this.lobby.code,
       })
     );
