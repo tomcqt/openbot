@@ -1,4 +1,4 @@
-import { Config, JoinRoomResponse } from '../types';
+import { Config, JoinRoomResponse, Room } from '../types';
 import { io, Socket } from 'socket.io-client';
 import { openDatabase } from '../database';
 import { IncomingMessage } from 'http';
@@ -115,7 +115,7 @@ export default class Rooms {
     return parsedData;
   }
 
-  async check(room: any): Promise<boolean> {
+  async check(room: Room): Promise<boolean> {
     if (!this.db) this.db = await openDatabase();
 
     return await new Promise((resolve, reject) => {
@@ -157,6 +157,7 @@ export default class Rooms {
     userToken: string;
     nickname: string;
     language: string;
+    server?: string | undefined;
   }) {
     const { roomCode, userToken, nickname, language } = options;
 
@@ -164,14 +165,19 @@ export default class Rooms {
       this.config.bot.profile_image
     );
 
-    const response = await axios.post<JoinRoomResponse>(
-      'https://jklm.fun/api/joinRoom',
-      { roomCode }
-    );
+    let serverURL;
+    if (!options.server) {
+      const response = await axios.post<JoinRoomResponse>(
+        'https://jklm.fun/api/joinRoom',
+        { roomCode }
+      );
 
-    const serverURL = response.data?.url;
-    if (!serverURL) {
-      throw new Error('Invalid room code');
+      serverURL = response.data?.url;
+      if (!serverURL) {
+        throw new Error('Invalid room code');
+      }
+    } else {
+      serverURL = options.server;
     }
 
     const chatSocket: Socket = io(serverURL, {
@@ -212,19 +218,23 @@ export default class Rooms {
     };
   }
 
-  async join(code: string, server: string) {
+  async join(
+    code: string,
+    server: string | undefined = undefined
+  ): Promise<void> {
     const { chatSocket, gameSocket } = await this.#connectToRoom({
       roomCode: code,
       userToken: await this.parent.getUserToken(),
       nickname: this.config.bot.username,
       language: this.lang.get('language', 'en-US'),
+      server: server,
     });
 
     this.chatSocket = chatSocket;
     this.gameSocket = gameSocket;
   }
 
-  async setup(chatHandler: any, gameHandler: any): Promise<void> {
+  async setup(chatHandler: Function, gameHandler: Function): Promise<void> {
     if (!this.chatSocket || !this.gameSocket) {
       throw new Error('Chat or game socket not connected');
     }
