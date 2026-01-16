@@ -3,6 +3,7 @@ import { Config, ChatData } from '../types';
 import Client from '../client';
 import Lang from './lang';
 import Commands from './commands';
+import Player from './player';
 
 export default class Bot {
   logger: Config['logger'];
@@ -15,6 +16,7 @@ export default class Bot {
     server: string | undefined;
   };
   commands: Commands;
+  player: Player;
 
   constructor(config: Config) {
     this.logger = config.logger;
@@ -26,6 +28,7 @@ export default class Bot {
       code: undefined,
       server: undefined,
     };
+    this.player = new Player(this);
     this.commands = new Commands(this);
   }
 
@@ -85,7 +88,10 @@ export default class Bot {
     await this.client.rooms.join(this.lobby.code!, this.lobby.server!);
     this.logger.log('debug', 'Joined lobby');
 
-    await this.client.setup(this.chat.bind(this), undefined);
+    await this.client.setup(
+      this.chat.bind(this),
+      this.player.handler.bind(this.player)
+    );
   }
 
   async start(): Promise<void> {

@@ -239,7 +239,7 @@ export default class Rooms {
       throw new Error('Chat or game socket not connected');
     }
     this.chatSocket.on('chat', chatHandler);
-    this.gameSocket.on('game', gameHandler);
+    this.gameSocket.onAny(gameHandler);
   }
 
   getChatSocket(): Socket {

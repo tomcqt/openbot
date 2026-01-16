@@ -6,6 +6,7 @@ import path from 'node:path';
 import Rooms from './rooms';
 import sharp from 'sharp';
 import Chat from './chat';
+import Game from './game';
 
 export default class Client {
   config: Config['conf'];
@@ -14,6 +15,7 @@ export default class Client {
   db: undefined | LowDb;
   chat: Chat;
   language: Lang;
+  game: Game;
 
   constructor(config: Config, lang: Lang) {
     this.config = config.conf;
@@ -22,6 +24,7 @@ export default class Client {
     this.db = undefined;
     this.chat = new Chat(this);
     this.language = lang;
+    this.game = new Game(this);
   }
 
   async getUserToken(): Promise<string> {
@@ -74,8 +77,8 @@ export default class Client {
     return buffer.toString('base64');
   }
 
-  async setup(chatHandler: any, errorHandler: any): Promise<void> {
-    await this.rooms.setup(chatHandler, errorHandler);
+  async setup(chatHandler: any, gameHandler: any): Promise<void> {
+    await this.rooms.setup(chatHandler, gameHandler);
   }
 
   parseResponse(response: Message) {

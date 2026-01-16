@@ -47,7 +47,7 @@ export default class Commands {
   }
 
   parseChat(data: ChatData, text: string): Message {
-    this.logger.log('debug', `${data.nickname}: ${text}`);
+    this.logger.log('info', `<${data.nickname}> ${text}`);
     let out: Message = {
       type: 'message',
       data: {
