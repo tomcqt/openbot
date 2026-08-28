@@ -25,7 +25,7 @@ export default class Commands {
     }
     this.logger.log(
       'debug',
-      `Loaded ${Object.keys(this.commands).length} commands`
+      `Loaded ${Object.keys(this.commands).length} commands`,
     );
     this.logger.log('debug', JSON.stringify(this.commands));
   }

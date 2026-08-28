@@ -18,7 +18,7 @@ export type Room = {
 export type Player = {
   id: string;
   name: string;
-  // TODO: add more fields
+  // TODO: Add fields for the PFP and role
 };
 
 export type Token = {

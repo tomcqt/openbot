@@ -27,6 +27,13 @@ export default class Client {
     this.game = new Game(this);
   }
 
+  /**
+   * Gives a properly formatted user token for the bot to use when
+   * joining a room for the first time, if none is already saved.
+   *
+   * @returns A 16-character long string using the default character set from
+   *          the game.
+   */
   async getUserToken(): Promise<string> {
     if (!this.db) this.db = await openDatabase();
 
@@ -62,15 +69,26 @@ export default class Client {
     return token;
   }
 
+  /**
+   * Parses the profile picture of the bot from the config to be able
+   * to send it properly to the server when joining.
+   *
+   * @param filename The filename of the image to be used.
+   *
+   * @param quality The JPEG quality to be used. Defaults to `80`.
+   *
+   * @returns The fully formatted image as a string that can be sent to the
+   *          server.
+   */
   async parseProfileImage(
     filename: string,
-    quality: number = 80
+    quality: number = 80,
   ): Promise<string> {
     const filePath = path.resolve(filename);
 
     const buffer = await sharp(filePath)
-      .resize(128, 128, { fit: 'fill' }) // exact 128x128
-      .flatten({ background: '#ffffff' }) // handle transparency
+      .resize(128, 128, { fit: 'fill' }) // resizes to not hit file size limit
+      .flatten({ background: '#ffffff' }) // fixes transparency
       .jpeg({ quality })
       .toBuffer();
 

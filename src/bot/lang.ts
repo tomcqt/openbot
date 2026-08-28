@@ -26,10 +26,27 @@ export default class Lang {
     this.logger.log('debug', 'Language file loaded.');
   }
 
+  /**
+   * Gets a language value from the currently loaded language file.
+   *
+   * @param key The key for the string. Formatted as the JSON path separated by
+   *            dots.
+   *
+   *            Example: `logs.start.in_progress`
+   *
+   * @param fallback The fallback string that will be used if the key does not exist.
+   *
+   * @param vars Variables that will replace pieces of the string. These are
+   *             formatted as `%%value%%` for values from the `vars` variable,
+   *             and `%value%` for values from the `config.toml` file.
+   *
+   * @returns The final string based on the key and variables set up, or the
+   *          fallback if it doesn't exist or something goes wrong.
+   */
   get(
     key: string,
     fallback: string = key,
-    vars: Record<string, any> = {}
+    vars: Record<string, any> = {},
   ): string {
     this.logger.log('debug', `Getting language key: ${key}`);
 

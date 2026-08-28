@@ -33,7 +33,7 @@ export default class Bot {
   }
 
   async #init(): Promise<void> {
-    this.logger.info(this.language.get('logs.start.in_progress'));
+    this.logger.info('Starting up...');
 
     this.logger.log('debug', 'Connecting to database');
     this.db = await openDatabase();
@@ -45,7 +45,7 @@ export default class Bot {
       this.logger.log('debug', 'No existing rooms found, creating room.');
       const room: any = await this.client.rooms.create(
         this.config.client.room_name,
-        true
+        true,
       );
       this.lobby.code = room.roomCode;
       this.lobby.server = room.server;
@@ -59,7 +59,7 @@ export default class Bot {
           if (room.isLobby) {
             this.logger.log(
               'debug',
-              `Room ${room.roomCode} is a lobby, joining.`
+              `Room ${room.roomCode} is a lobby, joining.`,
             );
             this.lobby.code = room.roomCode;
             this.lobby.server = room.server;
@@ -67,7 +67,7 @@ export default class Bot {
         } else {
           this.logger.log('debug', `Room ${room.roomCode} no longer exists.`);
           this.db.data!.rooms = this.db.data!.rooms.filter(
-            (r: any) => r.roomCode !== room.roomCode
+            (r: any) => r.roomCode !== room.roomCode,
           );
           await this.db.write();
         }
@@ -76,7 +76,7 @@ export default class Bot {
         this.logger.log('debug', 'No existing rooms found, creating room.');
         const room: any = await this.client.rooms.create(
           this.config.client.room_name,
-          true
+          true,
         );
         this.lobby.code = room.roomCode;
         this.lobby.server = room.server;
@@ -90,7 +90,7 @@ export default class Bot {
 
     await this.client.setup(
       this.chat.bind(this),
-      this.player.handler.bind(this.player)
+      this.player.handler.bind(this.player),
     );
   }
 
@@ -99,12 +99,12 @@ export default class Bot {
     this.logger.info(
       this.language.get('logs.start.done', undefined, {
         ms: process.uptime() * 1000,
-      })
+      }),
     );
     this.logger.info(
       this.language.get('logs.join', undefined, {
         code: this.lobby.code,
-      })
+      }),
     );
   }
 
