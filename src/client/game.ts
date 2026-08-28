@@ -14,7 +14,7 @@ export default class Game {
     if (!this.socket) this.socket = this.parent.rooms.getGameSocket();
     if (this.socket == null)
       throw new Error(
-        'Getting (game) socket went wrong, socket not yet connected when sending data?'
+        'Getting (game) socket went wrong, socket not yet connected when sending data?',
       );
     return this.socket;
   }

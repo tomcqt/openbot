@@ -28,7 +28,7 @@ export default class Rooms {
 
   async create(
     name: string = this.config.client.room_name,
-    isLobby: boolean = false
+    isLobby: boolean = false,
   ): Promise<unknown> {
     if (!this.db) this.db = await openDatabase();
 
@@ -66,7 +66,7 @@ export default class Rooms {
               const parsed = JSON.parse(rawData);
               this.logger.log(
                 'debug',
-                'Room created with code ' + parsed.roomCode
+                'Room created with code ' + parsed.roomCode,
               );
 
               const roomCode = parsed.roomCode;
@@ -91,7 +91,7 @@ export default class Rooms {
             } catch (e) {
               if (e instanceof Error) {
                 this.logger.error(
-                  'Failed to parse room response: ' + e.message
+                  'Failed to parse room response: ' + e.message,
                 );
                 reject(e);
               } else {
@@ -100,7 +100,7 @@ export default class Rooms {
               }
             }
           });
-        }
+        },
       );
 
       req.on('error', (e) => {
@@ -147,7 +147,7 @@ export default class Rooms {
           res.on('error', (err: Error) => {
             console.error('Request error:', err);
           });
-        }
+        },
       );
     });
   }
@@ -162,14 +162,14 @@ export default class Rooms {
     const { roomCode, userToken, nickname, language } = options;
 
     const picture = await this.parent.parseProfileImage(
-      this.config.bot.profile_image
+      this.config.bot.profile_image,
     );
 
     let serverURL;
     if (!options.server) {
       const response = await axios.post<JoinRoomResponse>(
         'https://jklm.fun/api/joinRoom',
-        { roomCode }
+        { roomCode },
       );
 
       serverURL = response.data?.url;
@@ -198,7 +198,7 @@ export default class Rooms {
           { roomCode, userToken, nickname, language, picture },
           () => {
             resolve();
-          }
+          },
         );
       });
     });
@@ -220,7 +220,7 @@ export default class Rooms {
 
   async join(
     code: string,
-    server: string | undefined = undefined
+    server: string | undefined = undefined,
   ): Promise<void> {
     const { chatSocket, gameSocket } = await this.#connectToRoom({
       roomCode: code,

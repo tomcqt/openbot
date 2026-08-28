@@ -8,13 +8,13 @@ import Bot from './bot';
 import toml from 'toml';
 
 const config: Record<string, any> = toml.parse(
-  fs.readFileSync('config.toml', 'utf-8')
+  fs.readFileSync('config.toml', 'utf-8'),
 );
 
 const logFormat: Format = printf(
   ({ level, message, label, timestamp }: TransformableInfo) => {
     return `${timestamp} [${label}] ${level}: ${message}`;
-  }
+  },
 );
 
 const logger: Logger = createLogger({

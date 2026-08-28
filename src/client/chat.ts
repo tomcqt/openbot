@@ -14,7 +14,7 @@ export default class Chat {
     if (!this.socket) this.socket = this.parent.rooms.getChatSocket();
     if (this.socket == null)
       throw new Error(
-        'Getting (chat) socket went wrong, socket not yet connected when sending data?'
+        'Getting (chat) socket went wrong, socket not yet connected when sending data?',
       );
     return this.socket;
   }
